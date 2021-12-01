@@ -1,8 +1,8 @@
-import React from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { logIn, logOut } from "./actions/user";
 
-class App {
+class App extends Component {
   onClickBtn = () => {
     this.props.dispatchLogIn({
       id: "2",
@@ -12,7 +12,7 @@ class App {
   };
 
   render() {
-    const { isLoggedIn, user } = this.props;
+    const { isLoggingIn, user } = this.props;
     return (
       <>
         <h1>App</h1>
@@ -23,7 +23,7 @@ class App {
         ) : (
           "로그인 해주세요."
         )}
-        <button onClick={onClickBtn}>로그인</button>
+        <button onClick={this.onClickBtn}>로그인</button>
       </>
     );
   }
@@ -33,7 +33,7 @@ class App {
 // 클래스는 하나가 바뀌면 객체가 통째도 다시 실행되지만 훅스는 useSelector로 분리되어 있기 때문에 바뀐 것만 실행됨 -> 계산량 감소
 // 번외로 리덕스에서 데이터 가져오는 컴포넌트를 컨테이너(컴포넌트)라고 부름
 const mapStateToProps = (state) => ({
-  isLoggingIn: state.isLoggingIn,
+  isLoggingIn: state.user.isLoggingIn,
   user: state.user.data,
 });
 
