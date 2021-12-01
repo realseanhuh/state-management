@@ -2,6 +2,7 @@ const { createStore, compose, applyMiddleware } = require("redux");
 const reducer = require("./reducers"); // 1. reducer는 길어질 수 있기 때문에 별도로 분리
 const { logIn, logOut } = require("./actions/user");
 const { addPost } = require("./actions/post"); // 2. action은 많아질 수 있기 때문에 별도로 분리
+const { composeWithDevTools } = require("redux-devtools-extension");
 
 const initialState = {
   // initialState 구조를 잘 짜야 하위의 reducer, action의 구조도 분리해서 잘 잡을 수 있음
@@ -25,7 +26,10 @@ const thunkMiddleware = (store) => (dispatch) => (action) => {
   }
   return dispatch(action);
 };
-const enhancer = compose(applyMiddleware(loggingMiddleware, thunkMiddleware)); // 미들웨어를 통한 기능 추가(증강), applyMiddleware 함수 이외에도 여러 함수를 합성하기 위해 compose 사용
+const enhancer =
+  process.env.NODE_ENV === "production" // 배포 시 redux 구조가 노출되는 것을 막기
+    ? compose(applyMiddleware(loggingMiddleware, thunkMiddleware))
+    : composeWithDevTools(applyMiddleware(loggingMiddleware, thunkMiddleware)); // 미들웨어를 통한 기능 추가(증강), applyMiddleware 함수 이외에도 여러 함수를 합성하기 위해 compose 사용
 const store = createStore(reducer, initialState, enhancer);
 
 module.exports = store;
